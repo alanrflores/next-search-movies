@@ -1,0 +1,28 @@
+.detail {
+    color:rgb(211, 211, 211);
+    font-weight: 800;
+    background-color: #0f1b27;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.detail h1 {
+    padding: 8px;
+    margin: auto;
+
+}
+.detailImg {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+.detailImg img {
+    border-radius: 20px;
+    object-fit:cover;
+  
+}
+
+.detail ul li {
+    list-style: none;
+}
