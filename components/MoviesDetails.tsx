@@ -1,12 +1,15 @@
 import { MoviesDetailProps } from "@/types";
 import styles from '@/styles/MoviesDetail.module.css'
+import Link from "next/link";
 
 export const MoviesDetails: React.FC<MoviesDetailProps> = ({ moviesDetail }) => {
 //  console.log('moviesDetail', moviesDetail)
-
  const { Actors,  Director, Genre, Language, Plot, Poster, Title, Type } = moviesDetail;
+
 return (
+    
     <div className={styles.detail}>
+      <Link href={'/'}>Ir a Inicio</Link>
       <div className={styles.detailImg}>
       <img src={Poster} alt={Title} />
       </div>

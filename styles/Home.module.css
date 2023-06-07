@@ -1,4 +1,17 @@
-.peliculas {
+
+.containerMovies {
   display: flex;
-  justify-content: center;
+  font-family: 'Cascadia code';
+  flex-direction: column;
+  background-color: #0f1b27;
+  border-radius: 10px;
+  padding: 20px;
+  color: white;
+  margin: 10px;
+  height: 100%;
 }
+
+.containerMovies h1 {
+  font-size: xxx-large;
+}
+

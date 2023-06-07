@@ -4,62 +4,105 @@ import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import PageLayout from "@/components/PageLayout";
 import React, { useEffect, useState } from "react";
-import { Movies } from "@/types";
+import { Movies, MoviesListProps } from "@/types";
 import { MoviesList } from "@/components/MoviesList";
+import {
+  Button,
+  Flex,
+  Center,
+  Input,
+  Container,
+  Stack,
+  Box,
+} from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import MoviesPopularity from "@/components/MoviesPopularity";
+
+
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const [movies, setMovies] = useState<Movies[]>([]);
   const [search, setSearch] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   const url = `https://www.omdbapi.com/?apikey=${process.env.NEXT_PUBLIC_API_KEY}&s=${search}`;
 
-  const getMovies = (search: string | string[] | undefined) => {
+  const getMovies = async (search: string): Promise<Movies[] | undefined> => {
     if (search) {
-      fetch(url)
-        .then((res) => res.json())
-        .then((data) => setMovies(data.Search))
-        .catch((error) => console.log(error));
+      setLoading(true);
+      const response = await axios.get(url);
+      setLoading(false);
+      return response.data.Search;
     }
   };
-  useEffect(() => {
-    getMovies(search);
-  }, []);
+
+  const { data, isSuccess, isError, refetch } = useQuery(
+    ["movies", search],
+    () => getMovies(search),
+    {
+      enabled: false,
+    }
+  );
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (search === "") return;
     getMovies(search);
-    setSearch("");
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
+  
 
   return (
     <>
       <PageLayout title="Next - Home">
-        <main>
-          <div className="peliculas">
-            <h2>Peliculasdb</h2>
-
+        <div className={styles.containerMovies}>
+          <Container>
+            <h1>PelisNext</h1>
+            <h3>Busca tus peliculas favoritas</h3>
             <form action="" onSubmit={handleSubmit}>
-              <input
-                style={{ width: 160, borderRadius: 4 }}
-                type="text"
-                name="search"
-                placeholder="Batman.. Superman.. etc"
-                value={search}
-                onChange={handleChange}
-              />
-              <button type="submit">Search</button>
+              <Box py={3}>
+                <Input
+                  variant="filled"
+                  placeholder="Batman.. Superman.. etc"
+                  type="text"
+                  name="search"
+                  value={search}
+                  onChange={handleChange}
+                />
+              </Box>
+              <Button
+                colorScheme='facebook'
+                variant="outline"
+                border="none"
+                onClick={() => refetch()}
+              >
+                Buscar
+              </Button>
             </form>
-            {movies.length === 0 && <h3>Busca tus peliculas favoritas.</h3>}
-            {movies.length > 0 && <MoviesList movies={movies} />}
-          </div>
-        </main>
+          </Container>
+          <Box>
+            {loading ? (
+              <div style={{ padding: 8, marginTop: 30 }}>
+                <h2 style={{ textAlign: "center" }}>Cargando...</h2>
+              </div>
+            ) : null}
+            {isError && (
+              <div style={{ padding: 8, marginTop: 30 }}>
+                <h2 style={{ textAlign: "center" }}>Ops, Algo salio mal...</h2>
+              </div>
+            )}
+            {isSuccess && <MoviesList movies={data} />}
+          </Box>
+          <Box>
+           <MoviesPopularity />
+          </Box>
+        </div>
       </PageLayout>
     </>
   );

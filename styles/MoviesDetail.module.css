@@ -1,15 +1,18 @@
 .detail {
     color:rgb(211, 211, 211);
-    font-weight: 800;
     background-color: #0f1b27;
     border-radius: 10px;
     display: flex;
+    font-family: 'Cascadia code';
+    font-weight: 700;
     justify-content: center;
     flex-direction: column;
+    padding: 10px;
 }
 .detail h1 {
     padding: 8px;
     margin: auto;
+    margin-top: 12px;
 
 }
 .detailImg {
@@ -20,9 +23,14 @@
 .detailImg img {
     border-radius: 20px;
     object-fit:cover;
+    transition: 1s ease;
   
+}
+.detailImg img:hover {
+    transform: scale(1.1);
 }
 
 .detail ul li {
     list-style: none;
+    padding: 14px;
 }
